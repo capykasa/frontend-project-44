@@ -1,10 +1,9 @@
-import askUserName from '../src/cli.js';
 import {
-  countCorrectAnswers,
   makeRandomNumber,
   askQuestion,
   getAnswer,
   getIncorrectMassage,
+  startGame,
 } from '../src/index.js';
 
 const brainPrimeRules = 'Answer "yes" if given number is prime. Otherwise answer "no".';
@@ -23,27 +22,23 @@ const checkIsPrime = (number) => {
   return 'yes';
 };
 
-const brainPrime = () => {
-  const userName = askUserName();
-  console.log(brainPrimeRules);
+const brainPrimeGame = (userName) => {
+  const expression = makeRandomNumber(101);
 
-  let currentCorrectAnswers = 0;
-  while (currentCorrectAnswers < countCorrectAnswers) {
-    const expression = makeRandomNumber(101);
+  askQuestion(expression);
 
-    askQuestion(expression);
+  const userAnswer = getAnswer();
+  const correctAnswer = checkIsPrime(expression);
 
-    const userAnswer = getAnswer();
-    const correctAnswer = checkIsPrime(expression);
-
-    if (userAnswer !== correctAnswer) {
-      getIncorrectMassage(userAnswer, correctAnswer, userName);
-      return;
-    }
-    console.log('Correct!');
-    currentCorrectAnswers += 1;
+  if (userAnswer !== correctAnswer) {
+    getIncorrectMassage(userAnswer, correctAnswer, userName);
+    return false;
   }
-  console.log(`Congratulations, ${userName}!`);
+  return true;
+};
+
+const brainPrime = () => {
+  startGame(brainPrimeRules, brainPrimeGame);
 };
 
 export default brainPrime;

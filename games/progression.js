@@ -1,11 +1,10 @@
-import askUserName from '../src/cli.js';
 import {
-  countCorrectAnswers,
   makeRandomNumber,
   getRandomIndex,
   askQuestion,
   getAnswer,
   getIncorrectMassage,
+  startGame,
 } from '../src/index.js';
 
 const brainProgressionRules = 'What number is missing in the progression?';
@@ -26,35 +25,31 @@ const getDataProgression = (begin, step, length) => {
   return [progression.join(' '), correctAnswer];
 };
 
-const brainProgression = () => {
-  const userName = askUserName();
-  console.log(brainProgressionRules);
+const brainProgressionGame = (userName) => {
+  const beginProgression = makeRandomNumber(101);
+  const stepProgression = makeRandomNumber(11, 1);
 
-  let currentCorrectAnswers = 0;
-  while (currentCorrectAnswers < countCorrectAnswers) {
-    const beginProgression = makeRandomNumber(101);
-    const stepProgression = makeRandomNumber(11, 1);
+  const dataProgression = getDataProgression(
+    beginProgression,
+    stepProgression,
+    lengthProgression,
+  );
+  const expression = dataProgression[0];
+  const correctAnswer = dataProgression[1];
 
-    const dataProgression = getDataProgression(
-      beginProgression,
-      stepProgression,
-      lengthProgression,
-    );
-    const expression = dataProgression[0];
-    const correctAnswer = dataProgression[1];
+  askQuestion(expression);
 
-    askQuestion(expression);
+  const userAnswer = getAnswer();
 
-    const userAnswer = getAnswer();
-
-    if (Number(userAnswer) !== correctAnswer) {
-      getIncorrectMassage(userAnswer, correctAnswer, userName);
-      return;
-    }
-    console.log('Correct!');
-    currentCorrectAnswers += 1;
+  if (Number(userAnswer) !== correctAnswer) {
+    getIncorrectMassage(userAnswer, correctAnswer, userName);
+    return false;
   }
-  console.log(`Congratulations, ${userName}!`);
+  return true;
+};
+
+const brainProgression = () => {
+  startGame(brainProgressionRules, brainProgressionGame);
 };
 
 export default brainProgression;

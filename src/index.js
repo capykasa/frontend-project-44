@@ -1,4 +1,5 @@
 import readlineSync from 'readline-sync';
+import askUserName from './cli.js';
 
 export const countCorrectAnswers = 3;
 
@@ -16,4 +17,18 @@ export const getAnswer = () => {
 export const getIncorrectMassage = (userAnswer, correctAnswer, userName) => {
   console.log(`'${userAnswer}' is wrong answer ;(. Correct answer was '${correctAnswer}'.`);
   console.log(`Let's try again, ${userName}!`);
+};
+
+export const startGame = (rules, game) => {
+  const userName = askUserName();
+  console.log(rules);
+
+  let currentCorrectAnswers = 0;
+  while (currentCorrectAnswers < countCorrectAnswers) {
+    if (!game(userName)) return;
+
+    console.log('Correct!');
+    currentCorrectAnswers += 1;
+  }
+  console.log(`Congratulations, ${userName}!`);
 };

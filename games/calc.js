@@ -1,11 +1,10 @@
-import askUserName from '../src/cli.js';
 import {
-  countCorrectAnswers,
   makeRandomNumber,
   getRandomIndex,
   askQuestion,
   getAnswer,
   getIncorrectMassage,
+  startGame,
 } from '../src/index.js';
 
 const brainCalcRules = 'What is the result of the expression?';
@@ -30,31 +29,27 @@ const getCorrectAnswer = (number1, number2, symbol) => {
   return answer;
 };
 
-const brainCalc = () => {
-  const userName = askUserName();
-  console.log(brainCalcRules);
+const brainCalcGame = (userName) => {
+  const randomNumber1 = makeRandomNumber(101);
+  const randomNumber2 = makeRandomNumber(11);
+  const randomSymbol = symbols[getRandomIndex(symbols)];
 
-  let currentCorrectAnswers = 0;
-  while (currentCorrectAnswers < countCorrectAnswers) {
-    const randomNumber1 = makeRandomNumber(101);
-    const randomNumber2 = makeRandomNumber(11);
-    const randomSymbol = symbols[getRandomIndex(symbols)];
+  const expression = `${randomNumber1} ${randomSymbol} ${randomNumber2}`;
 
-    const expression = `${randomNumber1} ${randomSymbol} ${randomNumber2}`;
+  askQuestion(expression);
 
-    askQuestion(expression);
+  const userAnswer = getAnswer();
+  const correctAnswer = getCorrectAnswer(randomNumber1, randomNumber2, randomSymbol);
 
-    const userAnswer = getAnswer();
-    const correctAnswer = getCorrectAnswer(randomNumber1, randomNumber2, randomSymbol);
-
-    if (Number(userAnswer) !== correctAnswer) {
-      getIncorrectMassage(userAnswer, correctAnswer, userName);
-      return;
-    }
-    console.log('Correct!');
-    currentCorrectAnswers += 1;
+  if (Number(userAnswer) !== correctAnswer) {
+    getIncorrectMassage(userAnswer, correctAnswer, userName);
+    return false;
   }
-  console.log(`Congratulations, ${userName}!`);
+  return true;
+};
+
+const brainCalc = () => {
+  startGame(brainCalcRules, brainCalcGame);
 };
 
 export default brainCalc;

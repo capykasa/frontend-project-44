@@ -47,6 +47,7 @@ export default [
           js: 'always',
         },
       ],
+      'linebreak-style': 0,
       'import/no-named-as-default': 'off',
       'import/no-named-as-default-member': 'off',
       'no-console': 'off',
